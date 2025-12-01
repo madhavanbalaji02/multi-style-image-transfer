@@ -1,7 +1,23 @@
 // Configuration
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "http://localhost:8000"; // Changed from 127.0.0.1 to localhost
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log("DOM Loaded - Script Initialized");
+
+    // Connectivity Check
+    try {
+        const response = await fetch(`${API_BASE_URL}/docs`);
+        if (response.ok) {
+            console.log("✅ Backend is reachable!");
+        } else {
+            console.error("❌ Backend reachable but returned error:", response.status);
+            alert("Warning: Backend seems to be having issues.");
+        }
+    } catch (e) {
+        console.error("❌ Backend NOT reachable:", e);
+        alert("Error: Cannot connect to backend server at " + API_BASE_URL + ". Is it running?");
+    }
+
     const fileInput = document.getElementById('fileInput');
     const uploadBox = document.getElementById('uploadBox');
     const previewImage = document.getElementById('previewImage');
