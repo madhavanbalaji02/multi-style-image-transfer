@@ -137,21 +137,37 @@ def load_cyclegan_model():
     generator = GeneratorResNet()
     
     # Load weights (PyTorch 2.6+ requires weights_only=False for custom classes)
-    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
-    
-    # Handle different checkpoint formats
-    if isinstance(checkpoint, dict):
-        if 'generator' in checkpoint:
-            generator.load_state_dict(checkpoint['generator'])
-        elif 'model_state_dict' in checkpoint:
-            generator.load_state_dict(checkpoint['model_state_dict'])
-        elif 'state_dict' in checkpoint:
-            generator.load_state_dict(checkpoint['state_dict'])
+    try:
+        checkpoint = torch.load(model_path, map_location=device, weights_only=False)
+        
+        # Check if it's a full checkpoint or just weights
+        if isinstance(checkpoint, dict) and "G_BA" in checkpoint:
+            print("Detected full CycleGAN checkpoint. Extracting G_BA (Photo -> Painting)...")
+            # G_BA is typically the generator for Domain B (Photo) -> Domain A (Painting)
+            state_dict = checkpoint["G_BA"]
+            
+            # Remove 'module.' prefix if present (from DataParallel)
+            new_state_dict = {}
+            for k, v in state_dict.items():
+                name = k.replace("module.", "")
+                new_state_dict[name] = v
+            generator.load_state_dict(new_state_dict)
+            
+        elif isinstance(checkpoint, dict) and "model" in checkpoint:
+             generator.load_state_dict(checkpoint["model"])
+             
         else:
             generator.load_state_dict(checkpoint)
-    else:
-        generator.load_state_dict(checkpoint)
-    
+            
+    except Exception as e:
+        print(f"Error loading GAN model: {e}")
+        # Fallback: Try G_AB if G_BA fails or wasn't found
+        if isinstance(checkpoint, dict) and "G_AB" in checkpoint:
+             print("Retrying with G_AB...")
+             generator.load_state_dict(checkpoint["G_AB"])
+        else:
+            raise e
+
     generator.to(device).eval()
     _cyclegan_model = (generator, device)
     
