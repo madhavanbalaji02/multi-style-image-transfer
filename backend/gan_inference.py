@@ -162,21 +162,19 @@ def load_cyclegan_model():
     try:
         checkpoint = torch.load(model_path, map_location=device, weights_only=False)
         
-        # Check if it's a full checkpoint or just weights
-        if isinstance(checkpoint, dict) and "G_BA" in checkpoint:
-            print("Detected full CycleGAN checkpoint. Extracting G_BA (Photo -> Painting)...")
-            state_dict = checkpoint["G_BA"]
-            
-            # Remove 'module.' prefix if present (from DataParallel)
+        # Try G_AB first (might be the correct direction for this model)
+        if isinstance(checkpoint, dict) and "G_AB" in checkpoint:
+            print("Using G_AB (might be Photo -> Painting for this checkpoint)...")
+            state_dict = checkpoint["G_AB"]
             new_state_dict = {}
             for k, v in state_dict.items():
                 name = k.replace("module.", "")
                 new_state_dict[name] = v
             generator.load_state_dict(new_state_dict, strict=False)
             
-        elif isinstance(checkpoint, dict) and "G_AB" in checkpoint:
-            print("Using G_AB (Painting -> Photo direction)...")
-            state_dict = checkpoint["G_AB"]
+        elif isinstance(checkpoint, dict) and "G_BA" in checkpoint:
+            print("Detected full CycleGAN checkpoint. Extracting G_BA (Photo -> Painting)...")
+            state_dict = checkpoint["G_BA"]
             new_state_dict = {}
             for k, v in state_dict.items():
                 name = k.replace("module.", "")
