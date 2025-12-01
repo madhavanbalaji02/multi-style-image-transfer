@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Style Image Style Transfer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Multi-Style Image Style Transfer</h1>
+            <p>Transform your photos into art using GANs and Diffusion models.</p>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <div class="upload-box" id="uploadBox">
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <div class="upload-content">
+                        <span class="icon">📁</span>
+                        <p>Click or Drag & Drop to Upload Image</p>
+                    </div>
+                    <img id="previewImage" src="" alt="Preview" hidden>
+                </div>
+            </section>
+
+            <section class="controls-section">
+                <div class="control-group">
+                    <label for="styleSelect">Choose Style</label>
+                    <select id="styleSelect">
+                        <option value="cubism">Cubism</option>
+                        <option value="expressionism">Expressionism</option>
+                        <option value="fauvism">Fauvism</option>
+                        <option value="renaissance">Renaissance</option>
+                        <option value="pop_art">Pop Art</option>
+                        <option value="impressionism">Impressionism</option>
+                        <option value="vangogh">Van Gogh (LoRA Fine-tuned) ⭐</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="modelSelect">Choose Model</label>
+                    <select id="modelSelect">
+                        <option value="gan">GAN (Fast)</option>
+                        <option value="diffusion">Stable Diffusion (High Quality)</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+
+                <button id="generateBtn" disabled>Generate Art ✨</button>
+            </section>
+
+            <section class="results-section" id="resultsSection" hidden>
+                <h2>Results</h2>
+                <div class="loading-spinner" id="loadingSpinner" hidden>
+                    <div class="spinner"></div>
+                    <p>Creating your masterpiece... This may take a moment.</p>
+                </div>
+
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be injected here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by TensorFlow Hub & Stable Diffusion v1.5</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
