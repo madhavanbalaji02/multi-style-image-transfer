@@ -12,22 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let uploadedFilename = null;
 
-    // Show/hide GAN checkbox based on style selection
     const styleSelect = document.getElementById("styleSelect");
-    const ganCheckboxContainer = document.getElementById("ganCheckboxContainer");
-    const ganCheckbox = document.getElementById("ganCheckbox");
-
-    styleSelect.addEventListener("change", () => {
-        const style = styleSelect.value;
-
-        // Show GAN checkbox only for Van Gogh
-        if (style === "vangogh") {
-            ganCheckboxContainer.style.display = "block";
-        } else {
-            ganCheckboxContainer.style.display = "none";
-            ganCheckbox.checked = false;
-        }
-    });
 
     // Upload Box Interactions
     uploadBox.addEventListener('click', () => fileInput.click());
@@ -60,11 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function handleFileUpload(file) {
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
             previewImage.src = e.target.result;
             previewImage.hidden = false;
             document.querySelector('.upload-content').hidden = true;
+            generateBtn.disabled = false;
         };
         reader.readAsDataURL(file);
 
@@ -76,16 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 body: formData
             });
-
-            if (!response.ok) throw new Error('Upload failed');
-
             const data = await response.json();
             uploadedFilename = data.filename;
-            generateBtn.disabled = false;
-
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to upload image. Please try again.');
+            console.error('Upload failed:', error);
+            alert('Image upload failed');
         }
     }
 
@@ -93,11 +79,22 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', async () => {
         if (!uploadedFilename) return;
 
-        const style = styleSelect.value;
+        const selectedValue = styleSelect.value;
+        let backendStyle = selectedValue;
+        let backendModelType = "diffusion";
 
-        // Always use Diffusion, add GAN if checkbox is checked (Van Gogh only)
-        const useGan = ganCheckbox.checked && style === "vangogh";
-        const modelType = useGan ? "both" : "diffusion";
+        // Map dropdown selection to backend parameters
+        if (selectedValue === "vangogh_lora") {
+            backendStyle = "vangogh";
+            backendModelType = "diffusion";
+        } else if (selectedValue === "vangogh_gan") {
+            backendStyle = "vangogh";
+            backendModelType = "gan";
+        } else {
+            // Standard styles (cubism, etc.) always use diffusion
+            backendStyle = selectedValue;
+            backendModelType = "diffusion";
+        }
 
         generateBtn.disabled = true;
         resultsSection.hidden = false;
@@ -107,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const formData = new FormData();
             formData.append('filename', uploadedFilename);
-            formData.append('style', style);
-            formData.append('model_type', modelType);
+            formData.append('style', backendStyle);
+            formData.append('model_type', backendModelType);
 
             const response = await fetch(`${API_BASE_URL}/generate`, {
                 method: 'POST',
