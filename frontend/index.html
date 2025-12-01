@@ -15,18 +15,22 @@
     <div class="container">
         <header>
             <h1>Multi-Style Image Style Transfer</h1>
-            <p>Transform your photos into art using GANs and Diffusion models.</p>
+            <p>Transform your photos into art using GANs and Diffusion models</p>
         </header>
 
         <main>
+            <!-- Upload Section -->
             <section class="upload-section">
                 <div class="upload-box" id="uploadBox">
                     <input type="file" id="fileInput" accept="image/*" hidden>
                     <div class="upload-content">
-                        <span class="icon">📁</span>
-                        <p>Click or Drag & Drop to Upload Image</p>
+                        <div class="upload-icon">📸</div>
+                        <h2>Upload Your Image</h2>
+                        <p>Click or drag and drop your image here</p>
                     </div>
-                    <img id="previewImage" src="" alt="Preview" hidden>
+                    <div class="preview-container">
+                        <img id="previewImage" hidden>
+                    </div>
                 </div>
             </section>
 
