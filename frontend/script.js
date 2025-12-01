@@ -12,28 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let uploadedFilename = null;
 
-    // Auto-update model availability based on style
+    // Show/hide GAN checkbox based on style selection
     const styleSelect = document.getElementById("styleSelect");
-    const modelSelect = document.getElementById("modelSelect");
+    const ganCheckboxContainer = document.getElementById("ganCheckboxContainer");
+    const ganCheckbox = document.getElementById("ganCheckbox");
 
     styleSelect.addEventListener("change", () => {
         const style = styleSelect.value;
 
-        // GAN model only available for Van Gogh (friend's CycleGAN)
+        // Show GAN checkbox only for Van Gogh
         if (style === "vangogh") {
-            // Enable all model options for Van Gogh
-            Array.from(modelSelect.options).forEach(opt => opt.disabled = false);
+            ganCheckboxContainer.style.display = "block";
         } else {
-            // Disable GAN for non-Van Gogh styles
-            Array.from(modelSelect.options).forEach(opt => {
-                if (opt.value === "gan" || opt.value === "both") {
-                    opt.disabled = true;
-                }
-            });
-            // Auto-select Diffusion if GAN was selected
-            if (modelSelect.value === "gan" || modelSelect.value === "both") {
-                modelSelect.value = "diffusion";
-            }
+            ganCheckboxContainer.style.display = "none";
+            ganCheckbox.checked = false;
         }
     });
 
@@ -102,7 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!uploadedFilename) return;
 
         const style = styleSelect.value;
-        const model = modelSelect.value;
+
+        // Always use Diffusion, add GAN if checkbox is checked (Van Gogh only)
+        const useGan = ganCheckbox.checked && style === "vangogh";
+        const modelType = useGan ? "both" : "diffusion";
 
         generateBtn.disabled = true;
         resultsSection.hidden = false;
@@ -113,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('filename', uploadedFilename);
             formData.append('style', style);
-            formData.append('model', model);
+            formData.append('model_type', modelType);
 
             const response = await fetch(`${API_BASE_URL}/generate`, {
                 method: 'POST',
@@ -137,12 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResults(results) {
         addResultCard("Original", previewImage.src, null);
 
-        if (results.gan) {
-            addResultCard("GAN Model", `${API_BASE_URL}${results.gan}`, results.gan);
-        }
-
         if (results.diffusion) {
             addResultCard("Stable Diffusion", `${API_BASE_URL}${results.diffusion}`, results.diffusion);
+        }
+
+        if (results.gan) {
+            addResultCard("GAN (CycleGAN)", `${API_BASE_URL}${results.gan}`, results.gan);
         }
     }
 

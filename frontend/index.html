@@ -44,13 +44,11 @@
                     </select>
                 </div>
 
-                <div class="control-group">
-                    <label for="modelSelect">Choose Model</label>
-                    <select id="modelSelect">
-                        <option value="gan">GAN (Fast)</option>
-                        <option value="diffusion">Stable Diffusion (High Quality)</option>
-                        <option value="both">Both</option>
-                    </select>
+                <div class="control-group" id="ganCheckboxContainer" style="display: none;">
+                    <label>
+                        <input type="checkbox" id="ganCheckbox">
+                        Also generate with GAN (Friend's CycleGAN) - Fast
+                    </label>
                 </div>
 
                 <button id="generateBtn" disabled>Generate Art ✨</button>
