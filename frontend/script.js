@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             previewImage.src = e.target.result;
             previewImage.hidden = false;
             document.querySelector('.upload-content').hidden = true;
-            generateBtn.disabled = false;
+            // Don't enable generate button yet - wait for upload to finish
         };
         reader.readAsDataURL(file);
 
@@ -69,15 +69,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json();
             uploadedFilename = data.filename;
+            console.log("Upload successful, filename:", uploadedFilename);
         } catch (error) {
             console.error('Upload failed:', error);
             alert('Image upload failed');
         }
     }
 
-    // Generate Button Interaction
-    generateBtn.addEventListener('click', async () => {
-        if (!uploadedFilename) return;
+    // Generate Button Interaction - Direct assignment to ensure it works
+    generateBtn.onclick = async () => {
+        console.log("Generate button clicked (onclick)");
+
+        if (!uploadedFilename) {
+            alert("Please upload an image first!");
+            return;
+        }
 
         const selectedValue = styleSelect.value;
         let backendStyle = selectedValue;
@@ -97,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         generateBtn.disabled = true;
+        generateBtn.textContent = "Generating... 🎨";
         resultsSection.hidden = false;
         loadingSpinner.hidden = false;
         resultsGrid.innerHTML = '';
@@ -107,24 +114,31 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('style', backendStyle);
             formData.append('model', backendModelType);
 
+            console.log("Sending request:", { filename: uploadedFilename, style: backendStyle, model: backendModelType });
+
             const response = await fetch(`${API_BASE_URL}/generate`, {
                 method: 'POST',
                 body: formData
             });
 
-            if (!response.ok) throw new Error('Generation failed');
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Generation failed: ${response.status} - ${errorText}`);
+            }
 
             const results = await response.json();
+            console.log("Results received:", results);
             displayResults(results);
 
         } catch (error) {
             console.error('Error:', error);
-            alert(error.message);
+            alert(`Error: ${error.message}`);
         } finally {
             loadingSpinner.hidden = true;
             generateBtn.disabled = false;
+            generateBtn.textContent = "Generate Art ✨";
         }
-    });
+    };
 
     function displayResults(results) {
         addResultCard("Original", previewImage.src, null);
