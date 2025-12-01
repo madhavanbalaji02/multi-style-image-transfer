@@ -17,6 +17,15 @@ if 'config' not in sys.modules:
     class Config:
         pass
     hyperparameters_mock.Config = Config
+
+    # Add a dummy Hyperparameters class (likely what the model wants)
+    class Hyperparameters:
+        def __init__(self):
+            self.channels = 3
+            self.img_height = 256
+            self.img_width = 256
+            self.n_residual_blocks = 9
+    hyperparameters_mock.Hyperparameters = Hyperparameters
     
     sys.modules['config.hyperparameters'] = hyperparameters_mock
     config_mock.hyperparameters = hyperparameters_mock
