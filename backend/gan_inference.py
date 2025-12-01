@@ -162,19 +162,19 @@ def load_cyclegan_model():
     try:
         checkpoint = torch.load(model_path, map_location=device, weights_only=False)
         
-        # Use G_BA (Photo -> Van Gogh Painting)
-        if isinstance(checkpoint, dict) and "G_BA" in checkpoint:
-            print("Loading G_BA (Photo -> Van Gogh Painting)...")
-            state_dict = checkpoint["G_BA"]
+        # Use G_AB (produces the yellow/green artistic effect)
+        if isinstance(checkpoint, dict) and "G_AB" in checkpoint:
+            print("Loading G_AB (CycleGAN generator)...")
+            state_dict = checkpoint["G_AB"]
             new_state_dict = {}
             for k, v in state_dict.items():
                 name = k.replace("module.", "")
                 new_state_dict[name] = v
             generator.load_state_dict(new_state_dict, strict=False)
             
-        elif isinstance(checkpoint, dict) and "G_AB" in checkpoint:
-            print("Fallback: Using G_AB...")
-            state_dict = checkpoint["G_AB"]
+        elif isinstance(checkpoint, dict) and "G_BA" in checkpoint:
+            print("Fallback: Using G_BA...")
+            state_dict = checkpoint["G_BA"]
             new_state_dict = {}
             for k, v in state_dict.items():
                 name = k.replace("module.", "")
