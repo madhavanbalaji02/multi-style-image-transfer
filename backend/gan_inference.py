@@ -94,8 +94,8 @@ def load_cyclegan_model():
     # Initialize generator
     generator = GeneratorResNet()
     
-    # Load weights
-    checkpoint = torch.load(model_path, map_location=device)
+    # Load weights (PyTorch 2.6+ requires weights_only=False for custom classes)
+    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
     
     # Handle different checkpoint formats
     if isinstance(checkpoint, dict):

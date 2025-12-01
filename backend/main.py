@@ -62,44 +62,49 @@ async def upload_image(file: UploadFile = File(...)):
 
 
 @app.post("/generate")
-async def generate_style(
-    filename: str = Form(...),
-    style: str = Form(...),
-    model: str = Form(...),
-):
-    content_path = os.path.join(UPLOAD_DIR, filename)
-
-    if not os.path.exists(content_path):
-        raise HTTPException(status_code=404, detail="Content image not found")
-
-    results = {}
-
+async def generate_style(filename: str = Form(...), style: str = Form(...), model_type: str = Form(...)):
     try:
-        # ---------- GAN ----------
-        if model in ["gan", "both"]:
-            apply_gan = get_apply_gan()
-
-            gan_filename = f"gan_{style}_{filename}"
-            gan_output_path = os.path.join(OUTPUT_DIR, gan_filename)
-
-            # GAN itself validates style inside gan_inference.py
-            await asyncio.to_thread(apply_gan, content_path, style, gan_output_path)
-            results["gan"] = f"/outputs/{gan_filename}"
-
-        # ---------- DIFFUSION ----------
-        if model in ["diffusion", "both"]:
-            apply_diffusion = get_apply_diffusion()
-
-            diff_filename = f"diff_{style}_{filename}"
-            diff_output_path = os.path.join(OUTPUT_DIR, diff_filename)
-
-            await asyncio.to_thread(apply_diffusion, content_path, style, diff_output_path)
-            results["diffusion"] = f"/outputs/{diff_filename}"
-
+        content_path = os.path.join(UPLOAD_DIR, filename)
+        if not os.path.exists(content_path):
+            raise HTTPException(status_code=404, detail="Uploaded image not found")
+        
+        results = {}
+        unique_id = str(uuid.uuid4())
+        
+        # Van Gogh style: GAN uses friend's CycleGAN, Diffusion uses your LoRA
+        # Other styles: Only Diffusion available
+        
+        if model_type == "gan" or model_type == "both":
+            # GAN only works for Van Gogh (friend's CycleGAN model)
+            if style.lower() == "vangogh":
+                gan_output = os.path.join(OUTPUT_DIR, f"gan_{style}_{unique_id}.jpeg")
+                try:
+                    apply_gan_func = get_apply_gan()
+                    await asyncio.to_thread(apply_gan_func, content_path, style, gan_output)
+                    results["gan"] = f"/outputs/{os.path.basename(gan_output)}"
+                except Exception as e:
+                    print(f"GAN generation error: {e}")
+                    results["gan"] = None
+            else:
+                # GAN not available for non-Van Gogh styles
+                results["gan"] = None
+                if model_type == "gan":
+                    raise HTTPException(status_code=400, detail="GAN model only available for Van Gogh style. Please select Stable Diffusion for other styles.")
+        
+        if model_type == "diffusion" or model_type == "both":
+            diff_output = os.path.join(OUTPUT_DIR, f"diff_{style}_{unique_id}.jpeg")
+            try:
+                apply_diffusion_func = get_apply_diffusion()
+                await asyncio.to_thread(apply_diffusion_func, content_path, style, diff_output)
+                results["diffusion"] = f"/outputs/{os.path.basename(diff_output)}"
+            except Exception as e:
+                print(f"Diffusion generation error: {e}")
+                results["diffusion"] = None
+        
         return results
-
+    
     except Exception as e:
-        print("Generation error:", e)
+        print(f"Generation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

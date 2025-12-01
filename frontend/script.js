@@ -12,18 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let uploadedFilename = null;
 
-    // Allowed GAN styles — synced with backend
-    const GAN_STYLES = ["cubism", "expressionism", "impressionism", "rain_princess"];
-
-    // Auto-enforce correct model selection
+    // Auto-update model availability based on style
     const styleSelect = document.getElementById("styleSelect");
     const modelSelect = document.getElementById("modelSelect");
 
     styleSelect.addEventListener("change", () => {
         const style = styleSelect.value;
 
-        if (GAN_STYLES.includes(style)) {
-            modelSelect.value = "gan";
+        // GAN model only available for Van Gogh (friend's CycleGAN)
+        if (style === "vangogh") {
+            // Enable all model options for Van Gogh
+            Array.from(modelSelect.options).forEach(opt => opt.disabled = false);
+        } else {
+            // Disable GAN for non-Van Gogh styles
+            Array.from(modelSelect.options).forEach(opt => {
+                if (opt.value === "gan" || opt.value === "both") {
+                    opt.disabled = true;
+                }
+            });
+            // Auto-select Diffusion if GAN was selected
+            if (modelSelect.value === "gan" || modelSelect.value === "both") {
+                modelSelect.value = "diffusion";
+            }
         }
     });
 
