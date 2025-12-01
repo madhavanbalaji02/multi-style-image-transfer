@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('filename', uploadedFilename);
             formData.append('style', backendStyle);
-            formData.append('model_type', backendModelType);
+            formData.append('model', backendModelType);
 
             const response = await fetch(`${API_BASE_URL}/generate`, {
                 method: 'POST',

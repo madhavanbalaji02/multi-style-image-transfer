@@ -62,7 +62,7 @@ async def upload_image(file: UploadFile = File(...)):
 
 
 @app.post("/generate")
-async def generate_style(filename: str = Form(...), style: str = Form(...), model_type: str = Form(...)):
+async def generate_style(filename: str = Form(...), style: str = Form(...), model: str = Form(...)):
     try:
         content_path = os.path.join(UPLOAD_DIR, filename)
         if not os.path.exists(content_path):
@@ -74,7 +74,7 @@ async def generate_style(filename: str = Form(...), style: str = Form(...), mode
         # Van Gogh style: GAN uses friend's CycleGAN, Diffusion uses your LoRA
         # Other styles: Only Diffusion available
         
-        if model_type == "gan" or model_type == "both":
+        if model == "gan" or model == "both":
             # GAN only works for Van Gogh (friend's CycleGAN model)
             if style.lower() == "vangogh":
                 gan_output = os.path.join(OUTPUT_DIR, f"gan_{style}_{unique_id}.jpeg")
@@ -88,10 +88,10 @@ async def generate_style(filename: str = Form(...), style: str = Form(...), mode
             else:
                 # GAN not available for non-Van Gogh styles
                 results["gan"] = None
-                if model_type == "gan":
+                if model == "gan":
                     raise HTTPException(status_code=400, detail="GAN model only available for Van Gogh style. Please select Stable Diffusion for other styles.")
         
-        if model_type == "diffusion" or model_type == "both":
+        if model == "diffusion" or model == "both":
             diff_output = os.path.join(OUTPUT_DIR, f"diff_{style}_{unique_id}.jpeg")
             try:
                 apply_diffusion_func = get_apply_diffusion()
