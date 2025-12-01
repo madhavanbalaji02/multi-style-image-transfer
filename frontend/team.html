@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team - Multi-Style Image Style Transfer</title>
+    <meta name="description" content="Meet the team behind the Multi-Style Image Style Transfer project">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand">🎨 Style Transfer</a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="team.html" class="active">Team</a></li>
+                <li><a href="dataset.html">Dataset</a></li>
+                <li><a href="models.html">Models</a></li>
+                <li><a href="index.html">Results</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Our Team</h1>
+            <p>Computer Vision Final Project</p>
+        </section>
+
+        <section class="info-section">
+            <h2>Course Information</h2>
+            <div class="info-card">
+                <h3>Project Details</h3>
+                <ul>
+                    <li><strong>Project:</strong> Multi-Style Image Style Transfer: GAN vs Diffusion</li>
+                    <li><strong>Course:</strong> Computer Vision</li>
+                    <li><strong>Institution:</strong> Indiana University</li>
+                    <li><strong>Resources:</strong> IU Big Red 200 HPC (A100 GPU)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="team-grid">
+            <div class="team-member">
+                <div class="feature-icon">👨‍💻</div>
+                <h3>Project Lead</h3>
+                <p>Full-stack development, Model training, HPC deployment</p>
+            </div>
+
+            <div class="team-member">
+                <div class="feature-icon">🎓</div>
+                <h3>Research & Development</h3>
+                <p>Model architecture, Dataset curation, Performance optimization</p>
+            </div>
+
+            <div class="team-member">
+                <div class="feature-icon">🎨</div>
+                <h3>Design & UI/UX</h3>
+                <p>Frontend design, User experience, Visual interface</p>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>Project Contributions</h2>
+            <div class="info-card">
+                <h3>Technical Achievements</h3>
+                <ul>
+                    <li>Trained custom Van Gogh LoRA model on 400 paintings using A100 GPU</li>
+                    <li>Implemented dual-model architecture (GAN + Diffusion)</li>
+                    <li>Built responsive full-stack web application with FastAPI backend</li>
+                    <li>Deployed production-ready application on Render.com</li>
+                    <li>Integrated quality metrics (LPIPS, CLIP) for model evaluation</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Technologies Used</h3>
+                <ul>
+                    <li><strong>Machine Learning:</strong> PyTorch, TensorFlow Hub, Diffusers, PEFT</li>
+                    <li><strong>Backend:</strong> FastAPI, Python 3.10, Uvicorn</li>
+                    <li><strong>Frontend:</strong> HTML5, CSS3, Vanilla JavaScript</li>
+                    <li><strong>Training:</strong> IU Big Red 200 HPC with A100 GPU</li>
+                    <li><strong>Deployment:</strong> Render.com, Docker</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by TensorFlow Hub & Stable Diffusion v1.5 | Computer Vision Final Project</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

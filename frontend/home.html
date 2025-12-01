@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Multi-Style Image Style Transfer</title>
+    <meta name="description" content="Transform photos into art using GANs and Diffusion models">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand">🎨 Style Transfer</a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="dataset.html">Dataset</a></li>
+                <li><a href="models.html">Models</a></li>
+                <li><a href="index.html">Results</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Multi-Style Image Style Transfer</h1>
+            <p>Transform your photos into art using GANs and Diffusion models</p>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Multiple Art Styles</h3>
+                <p>Choose from Cubism, Expressionism, Fauvism, Renaissance, Pop Art, and Impressionism to transform your
+                    images.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🌟</div>
+                <h3>Van Gogh LoRA</h3>
+                <p>Custom fine-tuned model trained on 400 authentic Van Gogh paintings using HPC GPU resources.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast GAN Processing</h3>
+                <p>Quick neural style transfer using pretrained GAN models for near-instant artistic transformations.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>High-Quality Diffusion</h3>
+                <p>Stable Diffusion v1.5 based img2img pipeline for premium quality results with detailed brushstrokes.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Model Comparison</h3>
+                <p>Compare GAN vs Diffusion results side-by-side to see the differences in quality and speed.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>Modern Web Interface</h3>
+                <p>Beautiful, responsive UI built with modern web technologies for seamless user experience.</p>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>About This Project</h2>
+            <div class="info-card">
+                <h3>Computer Vision Final Project</h3>
+                <p>
+                    This project explores the capabilities of different neural style transfer approaches,
+                    comparing traditional GAN-based methods with modern Diffusion models. We've also trained
+                    a custom LoRA adapter on Van Gogh's paintings to achieve authentic artistic style transfer.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>Technology Stack</h3>
+                <ul>
+                    <li><strong>Backend:</strong> FastAPI with Python 3.10+</li>
+                    <li><strong>Frontend:</strong> Vanilla HTML/CSS/JavaScript</li>
+                    <li><strong>GAN Model:</strong> TensorFlow Hub Fast Style Transfer</li>
+                    <li><strong>Diffusion:</strong> Stable Diffusion v1.5 with PEFT LoRA</li>
+                    <li><strong>Training:</strong> IU Big Red 200 HPC (A100 GPU)</li>
+                    <li><strong>Deployment:</strong> Render.com</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <div class="upload-content">
+                    <div class="upload-icon">📸</div>
+                    <h2>Upload Your Image</h2>
+                    <p>Click or drag and drop your image here</p>
+                </div>
+                <div class="preview-container">
+                    <img id="previewImage" hidden>
+                </div>
+            </div>
+        </section>
+
+        <section class="controls-section">
+            <div class="control-group">
+                <label for="styleSelect">Choose Style</label>
+                <select id="styleSelect">
+                    <option value="cubism">Cubism</option>
+                    <option value="expressionism">Expressionism</option>
+                    <option value="fauvism">Fauvism</option>
+                    <option value="renaissance">Renaissance</option>
+                    <option value="pop_art">Pop Art</option>
+                    <option value="impressionism">Impressionism</option>
+                    <option disabled>──────────────</option>
+                    <option value="vangogh_lora">Van Gogh (LoRA Fine-tuned) ⭐</option>
+                    <option value="vangogh_gan">Van Gogh (GAN - Fast) ⚡</option>
+                </select>
+            </div>
+
+            <button id="generateBtn">Generate Art ✨</button>
+        </section>
+
+        <section class="results-section" id="resultsSection" hidden>
+            <h2>Results</h2>
+            <div class="loading-spinner" id="loadingSpinner" hidden>
+                <div class="spinner"></div>
+                <p>Creating your masterpiece... This may take a moment.</p>
+            </div>
+
+            <div class="results-grid" id="resultsGrid">
+                <!-- Results will be injected here -->
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by TensorFlow Hub & Stable Diffusion v1.5 | Computer Vision Final Project</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

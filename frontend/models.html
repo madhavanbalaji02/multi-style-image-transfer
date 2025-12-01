@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Models - Multi-Style Image Style Transfer</title>
+    <meta name="description" content="Model architectures and technical details for GAN and Diffusion models">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand">🎨 Style Transfer</a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="dataset.html">Dataset</a></li>
+                <li><a href="models.html" class="active">Models</a></li>
+                <li><a href="index.html">Results</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Model Architectures</h1>
+            <p>GAN vs Diffusion Comparison</p>
+        </section>
+
+        <section class="info-section">
+            <h2>Model Comparison</h2>
+            <div class="model-comparison">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>GAN Model</th>
+                            <th>Stable Diffusion + LoRA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Architecture</strong></td>
+                            <td>Fast Neural Style Transfer</td>
+                            <td>Latent Diffusion Model (UNet)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base Model</strong></td>
+                            <td>TensorFlow Hub Pre-trained</td>
+                            <td>Stable Diffusion v1.5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Processing Time</strong></td>
+                            <td>2-5 seconds</td>
+                            <td>20-30 seconds</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Output Quality</strong></td>
+                            <td>Good (Fast)</td>
+                            <td>Excellent (High Detail)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fine-tuning</strong></td>
+                            <td>Pre-trained only</td>
+                            <td>Custom LoRA Adapter (6.1 MB)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPU Memory</strong></td>
+                            <td>~2GB</td>
+                            <td>~8GB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Use Case</strong></td>
+                            <td>Quick previews, real-time</td>
+                            <td>High-quality final outputs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>GAN Model Details</h2>
+            <div class="info-card">
+                <h3>⚡ Fast Neural Style Transfer</h3>
+                <p>
+                    Our GAN-based approach uses pre-trained models from TensorFlow Hub:
+                </p>
+                <ul>
+                    <li><strong>Architecture:</strong> Feed-forward convolutional neural network</li>
+                    <li><strong>Input Size:</strong> Flexible (automatically resized)</li>
+                    <li><strong>Output Size:</strong> Matches input dimensions</li>
+                    <li><strong>Styles Available:</strong> 6+ artistic styles</li>
+                    <li><strong>Processing:</strong> Single forward pass (very fast)</li>
+                    <li><strong>Advantages:</strong> Real-time processing, low memory usage</li>
+                    <li><strong>Limitations:</strong> Fixed styles, less detail than Diffusion</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>Stable Diffusion Model</h2>
+            <div class="info-card">
+                <h3>🎨 Latent Diffusion Architecture</h3>
+                <p>
+                    High-quality image generation using Stable Diffusion v1.5:
+                </p>
+                <ul>
+                    <li><strong>Base Model:</strong> runwayml/stable-diffusion-v1-5</li>
+                    <li><strong>Pipeline:</strong> Img2Img (image-to-image translation)</li>
+                    <li><strong>Scheduler:</strong> DDIM (Denoising Diffusion Implicit Models)</li>
+                    <li><strong>Inference Steps:</strong> 50 steps for high quality</li>
+                    <li><strong>Guidance Scale:</strong> 7.5 for balanced creativity</li>
+                    <li><strong>Strength:</strong> 0.75 (balance between source and style)</li>
+                    <li><strong>Resolution:</strong> 512×512 pixels</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🌟 Van Gogh LoRA Adapter</h3>
+                <p>
+                    Custom fine-tuned adapter trained specifically on Van Gogh paintings:
+                </p>
+                <ul>
+                    <li><strong>Technique:</strong> PEFT LoRA (Low-Rank Adaptation)</li>
+                    <li><strong>Rank:</strong> 8 (balance between quality and size)</li>
+                    <li><strong>Target Modules:</strong> to_q, to_k, to_v, to_out.0 (attention layers)</li>
+                    <li><strong>Adapter Size:</strong> 6.1 MB (tiny compared to full model)</li>
+                    <li><strong>Training Data:</strong> 400 Van Gogh paintings</li>
+                    <li><strong>Training Duration:</strong> 10 epochs (~2-3 hours on A100)</li>
+                    <li><strong>Learning Rate:</strong> 1e-4 with warmup</li>
+                    <li><strong>Optimizer:</strong> AdamW with weight decay</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>Training Hyperparameters</h2>
+            <div class="info-card">
+                <h3>📊 Van Gogh LoRA Training Configuration</h3>
+                <ul>
+                    <li><strong>Epochs:</strong> 10</li>
+                    <li><strong>Batch Size:</strong> 4</li>
+                    <li><strong>Learning Rate:</strong> 1e-4</li>
+                    <li><strong>Gradient Accumulation:</strong> 1 step</li>
+                    <li><strong>Mixed Precision:</strong> FP16 for faster training</li>
+                    <li><strong>Optimizer:</strong> AdamW</li>
+                    <li><strong>LR Scheduler:</strong> Cosine with warmup (500 steps)</li>
+                    <li><strong>Gradient Clipping:</strong> Max norm 1.0</li>
+                    <li><strong>Validation Split:</strong> 10% for monitoring</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>Performance Metrics</h2>
+            <div class="info-card">
+                <h3>📈 Evaluation Methods</h3>
+                <p>
+                    We use multiple metrics to evaluate style transfer quality:
+                </p>
+                <ul>
+                    <li><strong>LPIPS:</strong> Learned Perceptual Image Patch Similarity (lower is better)</li>
+                    <li><strong>CLIP Score:</strong> Text-image alignment for style matching</li>
+                    <li><strong>Inference Time:</strong> Processing speed measurement</li>
+                    <li><strong>Visual Quality:</strong> Manual assessment of brushstrokes and colors</li>
+                    <li><strong>Style Consistency:</strong> How well the output matches target style</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Models: TensorFlow Hub & Stable Diffusion v1.5 with LoRA | Trained on A100 GPU</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

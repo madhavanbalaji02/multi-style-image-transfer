@@ -2,26 +2,13 @@
 const API_BASE_URL = "http://localhost:8000"; // Changed from 127.0.0.1 to localhost
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Debug Helper
-    const statusLog = document.getElementById('statusLog');
-    function log(msg) {
-        console.log(msg);
-        if (statusLog) statusLog.innerHTML = `Status: ${msg}<br><small>${new Date().toLocaleTimeString()}</small>`;
-    }
-
-    log("Initializing...");
-
     // Connectivity Check
     try {
         const response = await fetch(`${API_BASE_URL}/docs`);
-        if (response.ok) {
-            log("✅ Backend Connected!");
-        } else {
-            log("❌ Backend Error: " + response.status);
+        if (!response.ok) {
             alert("Warning: Backend seems to be having issues.");
         }
     } catch (e) {
-        log("❌ Backend Offline");
         alert("Error: Cannot connect to backend server at " + API_BASE_URL + ". Is it running?");
     }
 
@@ -101,10 +88,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Generate Button Interaction - Direct assignment to ensure it works
     generateBtn.onclick = async () => {
-        log("Generate Clicked!");
+        console.log("Generate Clicked!");
 
         if (!uploadedFilename) {
-            log("❌ No Image Uploaded");
+            console.log("No Image Uploaded");
             alert("Please upload an image first!");
             return;
         }
@@ -132,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadingSpinner.hidden = false;
         resultsGrid.innerHTML = '';
 
-        log(`Generating: ${backendStyle} (${backendModelType})...`);
+        console.log(`Generating: ${backendStyle} (${backendModelType})...`);
 
         try {
             const formData = new FormData();
