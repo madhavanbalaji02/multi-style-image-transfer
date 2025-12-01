@@ -18,10 +18,24 @@ if 'config' not in sys.modules:
         pass
     hyperparameters_mock.Config = Config
 
-    # Add a dummy Hyperparameters class (likely what the model wants)
+    # Add a dummy Hyperparameters class matching friend's repo
     class Hyperparameters:
         def __init__(self):
-            self.channels = 3
+            # Attributes found in friend's repo
+            self.dataset_path = 'monet2photo'
+            self.input_nc = 3
+            self.output_nc = 3
+            self.ngf = 64
+            self.ndf = 64
+            self.batch_size = 1
+            self.n_epochs = 100
+            self.n_epochs_decay = 100
+            self.lr = 0.0002
+            self.beta1 = 0.5
+            self.beta2 = 0.999
+            self.lambda_A = 10.0
+            self.lambda_B = 10.0
+            self.pool_size = 50
             self.img_height = 256
             self.img_width = 256
             self.n_residual_blocks = 9
