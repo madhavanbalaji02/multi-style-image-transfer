@@ -4,9 +4,23 @@ from torchvision import transforms
 from PIL import Image
 import os
 import sys
+from types import ModuleType
 
-# Add current directory to path so 'config' module can be found
-sys.path.append(os.path.dirname(__file__))
+# Mock 'config' and 'config.hyperparameters' to satisfy pickled model dependencies
+if 'config' not in sys.modules:
+    config_mock = ModuleType('config')
+    sys.modules['config'] = config_mock
+    
+    hyperparameters_mock = ModuleType('config.hyperparameters')
+    
+    # Add a dummy Config class to hyperparameters
+    class Config:
+        pass
+    hyperparameters_mock.Config = Config
+    
+    sys.modules['config.hyperparameters'] = hyperparameters_mock
+    config_mock.hyperparameters = hyperparameters_mock
+
 import config
 
 # CycleGAN Generator Architecture (ResNet-based)
