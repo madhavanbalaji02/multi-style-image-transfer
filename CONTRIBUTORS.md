@@ -1,7 +1,7 @@
 # Collaborators
 
 ## GAN Model
-**CycleGAN Implementation:** [Friend's Name]
+**CycleGAN Implementation:** Vigneshwar Ravi Rao
 - Trained CycleGAN model for artistic style transfer
 - Model: `cycle_gan_model.pth` (324 MB)
 - Architecture: ResNet-based Generator with 9 residual blocks
