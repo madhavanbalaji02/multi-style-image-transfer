@@ -3,6 +3,11 @@ import torch.nn as nn
 from torchvision import transforms
 from PIL import Image
 import os
+import sys
+
+# Add current directory to path so 'config' module can be found
+sys.path.append(os.path.dirname(__file__))
+import config
 
 # CycleGAN Generator Architecture (ResNet-based)
 class ResidualBlock(nn.Module):
