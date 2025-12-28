@@ -219,23 +219,32 @@ def cyclegan_style_transfer(content_image):
         traceback.print_exc()
         raise gr.Error(f"Inference failed: {str(e)}")
 
-# ===== LoRA Style Transfer with ZeroGPU =====
-from diffusers import StableDiffusionImg2ImgPipeline
-from peft import PeftModel
-
 @spaces.GPU(duration=60)
 def lora_style_transfer(content_image, strength):
     """Van Gogh LoRA style transfer - runs on GPU via ZeroGPU"""
+    # Lazy import to avoid startup crashes on macOS
+    print("Lazy importing diffusers...")
+    from diffusers import StableDiffusionImg2ImgPipeline
+    from peft import PeftModel
+    print("Diffusers imported successfully.")
+    
     if content_image is None:
         return None
     try:
         # Load model inside GPU context
-        print("Loading SD + LoRA on GPU...")
+        # Determine device
+        if torch.cuda.is_available():
+            device = "cuda"
+        # Avoid MPS on mac due to mutex crashes - fall back to CPU
+        else:
+            device = "cpu"
+            
+        print(f"Loading SD + LoRA on {device}...")
         pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5",
-            torch_dtype=torch.float16,
+            torch_dtype=torch.float16 if device == "cuda" else torch.float32, 
             use_safetensors=True
-        ).to("cuda")
+        ).to(device)
         
         # Load LoRA weights if available
         if os.path.exists("./lora_weights"):
