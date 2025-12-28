@@ -1,0 +1,11 @@
+gradio>=5.0.0
+spaces
+numpy
+Pillow
+torch
+torchvision
+diffusers
+transformers
+accelerate
+safetensors
+peft
