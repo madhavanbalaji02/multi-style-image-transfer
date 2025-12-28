@@ -10,6 +10,8 @@ from torchvision import transforms
 import sys
 from types import ModuleType
 
+print(f"Gradio Version: {gr.__version__}")
+
 # Mock 'config' and 'config.hyperparameters' to satisfy pickled model dependencies
 if 'config' not in sys.modules:
     config_mock = ModuleType('config')
@@ -295,4 +297,4 @@ demo = gr.TabbedInterface(
     title="Multi-Style Image Style Transfer"
 )
 
-demo.queue().launch()
+demo.queue().launch(server_name="0.0.0.0", server_port=7860)
