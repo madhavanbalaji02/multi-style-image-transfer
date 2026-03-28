@@ -5,7 +5,6 @@
 - Trained CycleGAN model for artistic style transfer
 - Model: `cycle_gan_model.pth` (324 MB)
 - Architecture: ResNet-based Generator with 9 residual blocks
-- Training: [Add training details if available]
 
 ## Diffusion & LoRA
 **Van Gogh LoRA Fine-tuning:** Madhavan Balaji
